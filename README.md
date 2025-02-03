@@ -27,6 +27,7 @@ Este é um sistema simples de gerenciamento de livros via API.
 - *Resposta esperada:*
   json
   {
+    "id": 1,
     "titulo": "O Senhor dos Anéis",
     "autor": "J.R.R. Tolkien"
   }
@@ -45,6 +46,8 @@ Este é um sistema simples de gerenciamento de livros via API.
       "autor": "J.R.R. Tolkien"
     }
   ]
+  
+
 
 ### ➤ Buscar um livro por ID
 - *Método:* GET

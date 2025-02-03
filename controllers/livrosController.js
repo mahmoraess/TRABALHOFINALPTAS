@@ -1,6 +1,6 @@
-let livros = []; // Simulação de banco de dados
+let livros = []; 
 
-// Criar um novo livro
+// Criar um livro
 exports.criarLivro = (req, res) => {
     const { titulo, autor } = req.body;
     
@@ -14,19 +14,19 @@ exports.criarLivro = (req, res) => {
     res.status(201).json(novoLivro);
 };
 
-// Listar todos os livros
+// Lista os livros
 exports.listarLivros = (req, res) => {
     res.json(livros);
 };
 
-// Buscar um livro por ID
+// Busca um livro pelo ID
 exports.buscarLivroPorId = (req, res) => {
     const livro = livros.find(l => l.id == req.params.id);
     if (!livro) return res.status(404).json({ mensagem: 'Livro não encontrado' });
     res.json(livro);
 };
 
-// Atualizar um livro
+// Atualiza um livro
 exports.atualizarLivro = (req, res) => {
     const livro = livros.find(l => l.id == req.params.id);
     if (!livro) return res.status(404).json({ mensagem: 'Livro não encontrado' });
@@ -45,7 +45,7 @@ exports.atualizarLivro = (req, res) => {
     res.json(livro);
 };
 
-// Excluir um livro
+// Exclui um livro
 exports.excluirLivro = (req, res) => {
     livros = livros.filter(l => l.id != req.params.id);
     res.json({ mensagem: 'Livro removido com sucesso' });
