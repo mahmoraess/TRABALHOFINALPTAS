@@ -1,106 +1,111 @@
-import {randomUUID} from 'node: crypto'
+import { Livro } from "../models/livros.js";
 
-let alunos = [
-    { 
-        id: randomUUID(),
-        nome: 'O Morro dos Ventos Uivantes', 
-        autor: 'Emily Bronte'
+
+const listarLivros = async (req, res) => {
+    try {
+        const livros = await Livro.find()
+        res.json(livros)
+    } catch (error) {
+        return {
+            erro: true,
+            mensagem: 'Erro ao fazer requisição'
+        }
     }
-]
-
-const listarLivros = (req, res) => {
-    res. json(livros)
 }
 
 const addLivro = (req, res) => {
-    const (nome, autor) = req. body
-
-    if (!nome || !idade || !turma) {
-        return res json({
-            erro: true,
-            mensagem: 'Falta valores a inserir'
-        })}
-    }
-    const livro = {
-        id: randomUUID(), 
-        nome, 
-        autor,
-        }
-
-        try {
-            livros.push (livro)
-            return res.json({
-                erro: false,
-                mensagem: 'Valor inserido no banco'
-            })
-         catch (error) {
-            console.log(error)
-            return res.json ({
-                erro: true,
-                mensagem: error
-        })
-    }
-}
-
-const buscarLivroPorId = (req, res) => {
-    const {id} = req.params
-    const livro = livro.find((l) => l.id === parseInt(id))
-
-    if(!livro) {
-        return res.json ({
-            erro: true,
-            mensagem: 'livro não encontrado'
-        })
-    }
-    res.json(livro)
-}
-
-const atualizarLivro = (req, res) => {
-    const {id} = req.params;
-    const {nome, autor}= req.body;
-
-    const livro = livros.find((l) => l.id === (id));
-
-    if (!livro){
-        return res.json({
-            erro: true,
-            mensagem: 'livro não encontrado'
-        })
-    }
+    const {nome, autor} = req.body
 
     if (!nome || !autor) {
         return res.json({
             erro: true,
-            mensagem: 'Todos os campos são obrigatórios'
+            mensagem: 'Falta valores a inserir'
         })
     }
+    const livro = new Livro({nome, autor})
 
-    livro.nome = nome;
-    livro.autor = autor;
-
-    res.json({
-        erro: false,
-        mensagem: 'livro alterado com sucesso'
-        livro
-    })
+        try {
+            livro.save()
+            return res.json({
+                erro: false,
+                mensagem: 'Valor inserido no banco',
+                livro
+            })
+        } catch (error) {
+            console.log(error)
+            return res.json ({
+                erro: true,
+                mensagem: 'Erro ao fazer requisição'
+        })
+    }
 }
 
-const excluirLivro = (req, res) => {
-    const {id} = req.params;
-    const index = livros.findIndex((l) => l.id === (id))
-
-    if(index === -1){
+const buscarLivroPorId = async (req, res) => {
+    
+    try {
+        const {id} = req.params
+        const livro = await Livro.findById(id);
+    
+        if(!livro) {
+            return res.json ({
+                erro: true,
+                mensagem: 'livro não encontrado'
+            })
+        }
+        res.json(livro)
+        
+    } catch (error) {
+        console.log(error)
         return res.json({
             erro: true,
-            mensagem: 'Livro não encontrado'
+            mensagem: 'ID inválido'
         })
     }
+}
 
-    livros.splice(index, 1);
-    res.json({
-        erro: false,
-        mensagem: 'Livro deletado'
-    })
+const atualizarLivro = async (req, res) => {
+    try{
+        const {id} = req.params;
+        const livro = await Livro.findByIdAndUpdate(id, req.body, {new: true})
+        if (!livro){
+            return res.json({
+                erro: true,
+                mensagem: 'Livro não encontrado'
+            })
+        }
+        res.json({
+            erro: false, 
+            livro
+        })
+    } catch (error) {
+        res.json({
+        erro: true,
+        mensagem: 'livro não encontrado'
+        })
+    }
+}
+
+const excluirLivro = async (req, res) => {
+    try{
+        const {id} = req.params
+        const livro = await Livro.findByIdAndDelete(id)
+        if (!livro){
+            return res.json({
+                erro: true,
+                mensagem: 'Livro não encontrado'
+            })
+        }
+        res.json({
+            erro: false,
+            mensagem: 'Livro excluído com sucesso'
+        })
+    } catch (error){
+        console.log(error)
+        res.json({
+            erro: true,
+            mensagem: error
+        })
+    }
 }
 
     export {listarLivros, addLivro, buscarLivroPorId, atualizarLivro, excluirLivro}

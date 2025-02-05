@@ -1,9 +1,10 @@
 {
   "name": "trabalhofinalptas",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
+  "type": "module",
   "scripts": {
+    "start": "node --watch app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node app.js"
   },
@@ -11,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.21.2"
-  }
+    "express": "^4.21.2",
+    "mongoose": "^8.9.7"
+  },
+  "description": ""
 }
