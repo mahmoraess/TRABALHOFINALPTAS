@@ -1,52 +1,106 @@
-let livros = []; 
+import {randomUUID} from 'node: crypto'
 
-// Criar um livro
-exports.criarLivro = (req, res) => {
-    const { titulo, autor } = req.body;
-    
-    if (typeof titulo !== 'string' || titulo.trim() === '' || typeof autor !== 'string' || autor.trim() === '') {
-        return res.status(400).json({ mensagem: 'Título e autor devem ser strings não vazias' });
+let alunos = [
+    { 
+        id: randomUUID(),
+        nome: 'O Morro dos Ventos Uivantes', 
+        autor: 'Emily Bronte'
     }
-    
-    const id = livros.length + 1;
-    const novoLivro = { id, titulo, autor };
-    livros.push(novoLivro);
-    res.status(201).json(novoLivro);
-};
+]
 
-// Lista os livros
-exports.listarLivros = (req, res) => {
-    res.json(livros);
-};
+const listarLivros = (req, res) => {
+    res. json(livros)
+}
 
-// Busca um livro pelo ID
-exports.buscarLivroPorId = (req, res) => {
-    const livro = livros.find(l => l.id == req.params.id);
-    if (!livro) return res.status(404).json({ mensagem: 'Livro não encontrado' });
-    res.json(livro);
-};
+const addLivro = (req, res) => {
+    const (nome, autor) = req. body
 
-// Atualiza um livro
-exports.atualizarLivro = (req, res) => {
-    const livro = livros.find(l => l.id == req.params.id);
-    if (!livro) return res.status(404).json({ mensagem: 'Livro não encontrado' });
-
-    const { titulo, autor } = req.body;
-    
-    if (titulo && (typeof titulo !== 'string' || titulo.trim() === '')) {
-        return res.status(400).json({ mensagem: 'Título deve ser uma string não vazia' });
+    if (!nome || !idade || !turma) {
+        return res json({
+            erro: true,
+            mensagem: 'Falta valores a inserir'
+        })}
     }
-    if (autor && (typeof autor !== 'string' || autor.trim() === '')) {
-        return res.status(400).json({ mensagem: 'Autor deve ser uma string não vazia' });
-    }
-    
-    livro.titulo = titulo || livro.titulo;
-    livro.autor = autor || livro.autor;
-    res.json(livro);
-};
+    const livro = {
+        id: randomUUID(), 
+        nome, 
+        autor,
+        }
 
-// Exclui um livro
-exports.excluirLivro = (req, res) => {
-    livros = livros.filter(l => l.id != req.params.id);
-    res.json({ mensagem: 'Livro removido com sucesso' });
-};
+        try {
+            livros.push (livro)
+            return res.json({
+                erro: false,
+                mensagem: 'Valor inserido no banco'
+            })
+         catch (error) {
+            console.log(error)
+            return res.json ({
+                erro: true,
+                mensagem: error
+        })
+    }
+}
+
+const buscarLivroPorId = (req, res) => {
+    const {id} = req.params
+    const livro = livro.find((l) => l.id === parseInt(id))
+
+    if(!livro) {
+        return res.json ({
+            erro: true,
+            mensagem: 'livro não encontrado'
+        })
+    }
+    res.json(livro)
+}
+
+const atualizarLivro = (req, res) => {
+    const {id} = req.params;
+    const {nome, autor}= req.body;
+
+    const livro = livros.find((l) => l.id === (id));
+
+    if (!livro){
+        return res.json({
+            erro: true,
+            mensagem: 'livro não encontrado'
+        })
+    }
+
+    if (!nome || !autor) {
+        return res.json({
+            erro: true,
+            mensagem: 'Todos os campos são obrigatórios'
+        })
+    }
+
+    livro.nome = nome;
+    livro.autor = autor;
+
+    res.json({
+        erro: false,
+        mensagem: 'livro alterado com sucesso'
+        livro
+    })
+}
+
+const excluirLivro = (req, res) => {
+    const {id} = req.params;
+    const index = livros.findIndex((l) => l.id === (id))
+
+    if(index === -1){
+        return res.json({
+            erro: true,
+            mensagem: 'Livro não encontrado'
+        })
+    }
+
+    livros.splice(index, 1);
+    res.json({
+        erro: false,
+        mensagem: 'Livro deletado'
+    })
+}
+
+    export {listarLivros, addLivro, buscarLivroPorId, atualizarLivro, excluirLivro}
